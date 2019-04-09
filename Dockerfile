@@ -13,12 +13,15 @@ RUN cd /opt \
 #Deploy ENV helper
 RUN echo '#!/bin/sh' > /bin/to_spack &&\
     echo '. /opt/spack/share/spack/setup-env.sh' >> /bin/to_spack &&\
-    echo 'spack $@' >> /bin/to_spack && \
+    echo 'spack "${@}"' >> /bin/to_spack && \
     chmod +x /bin/to_spack
 #Install initial env
 RUN to_spack install environment-modules
 #This is to allow build as root of some packages (TAR for example)
 ENV FORCE_UNSAFE_CONFIGURE=1
+
+# Clean spack temp files in your image !!
+# RUN to_spack clean --all
 #
 # You may use "to_spack" as spack in following CMD
 #
